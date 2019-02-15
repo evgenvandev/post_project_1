@@ -2,6 +2,7 @@ package com.levelb.post;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,22 +40,27 @@ public class MessageBox {
     }
 
     public boolean delete(long id) {
-        Message message = search(id);
-        return messages.remove(message);
+        Iterator<Message> iterator = messages.iterator();
+        while (iterator.hasNext()) {
+            Message next = iterator.next();
+            if (next.getId() == id) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Long> sendToMainOffice() {
-        List<Message> toRemove = new ArrayList<>();
-        for (Message message : messages) {
-            boolean accepted = mainOffice.queue(message);
-            if (accepted) {
-                toRemove.add(message);
-            }
-        }
         List<Long> ids = new ArrayList<>();
-        for (Message message : toRemove) {
-            ids.add(message.getId());
-            messages.remove(message);
+        Iterator<Message> iterator = messages.iterator();
+        while (iterator.hasNext()) {
+            Message next = iterator.next();
+            boolean accepted = mainOffice.queue(next);
+            if (accepted) {
+                ids.add(next.getId());
+                iterator.remove();
+            }
         }
         return ids;
     }
