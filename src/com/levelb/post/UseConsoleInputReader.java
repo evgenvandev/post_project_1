@@ -16,20 +16,35 @@ public class UseConsoleInputReader {
     public void start() {
         while (true) {
             String line = scanner.nextLine();
-            // remove 2
-            if (line.toLowerCase().startsWith("remove")) {
-                String[] arr = line.trim().split(" ");
-                if (arr.length == 2) {
-                    long l = Long.parseLong(arr[1]);
-                    remove(l);
-                } else {
+            parseAndExecutingLine(line);
+        }
+    }
+
+    private void parseAndExecutingLine(String line) {
+        Scanner s = new Scanner(line);
+        // remove 2
+        String token = s.next();
+        if (token.equalsIgnoreCase("remove")) {
+            if (s.hasNextLong()) {
+                long l = s.nextLong();
+                if (s.hasNext()) {
                     System.out.println("Unknown format: " + line);
+                } else {
+                    remove(l);
                 }
-            } else if (line.equalsIgnoreCase("exit")) {
-                exit();
+            } else if (s.hasNext()) {
+                System.out.println("Unknown format: " + line);
             } else {
-                processUnknownCommand(line);
+                System.out.println("Wrong format: remove id - no id: " + line);
             }
+        } else if (token.equalsIgnoreCase("exit")) {
+            if (s.hasNext()) {
+                System.out.println("Unknown format: " + line);
+            } else {
+                exit();
+            }
+        } else {
+            processUnknownCommand(line);
         }
     }
 
