@@ -1,6 +1,7 @@
 package com.levelb.post.command;
 
 import com.levelb.post.Message;
+import com.levelb.post.MessageBox;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -18,19 +19,8 @@ public class AddCommand implements UserCommand {
         this.category = category;
     }
 
-    public String getSender() {
-        return sender;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Message.MessageCategory getCategory() {
-        return category;
+    @Override
+    public void execute(MessageBox messageBox) {
+        messageBox.add(category, sender, address, receiver);
     }
 }
