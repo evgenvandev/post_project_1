@@ -7,7 +7,7 @@ import java.util.Date;
  */
 public class Message {
 
-    enum MessageCategory {
+    public enum MessageCategory {
         REGULAR, SPECIAL, FIRST_CLASS
     }
 

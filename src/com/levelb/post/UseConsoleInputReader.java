@@ -1,5 +1,8 @@
 package com.levelb.post;
 
+import com.levelb.post.command.*;
+
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -13,51 +16,110 @@ public class UseConsoleInputReader {
         scanner = new Scanner(System.in);
     }
 
-    public void start() {
-        while (true) {
-            String line = scanner.nextLine();
-            parseAndExecutingLine(line);
-        }
-    }
-
-    private void parseAndExecutingLine(String line) {
-        Scanner s = new Scanner(line);
-        // remove 2
+    public UserCommand nextCommand() {
+        Scanner s = new Scanner(scanner.nextLine());
         String token = s.next();
         if (token.equalsIgnoreCase("remove")) {
-            if (s.hasNextLong()) {
-                long l = s.nextLong();
-                if (s.hasNext()) {
-                    System.out.println("Unknown format: " + line);
-                } else {
-                    remove(l);
-                }
-            } else if (s.hasNext()) {
-                System.out.println("Unknown format: " + line);
-            } else {
-                System.out.println("Wrong format: remove id - no id: " + line);
+            return parseRemove(s);
+        } else if (token.equalsIgnoreCase("edit")) {
+            return parseEdit(s);
+        } else if (token.equalsIgnoreCase("add")) {
+            return parseAdd(s);
+        } else if (token.equalsIgnoreCase("send")) {
+            if (!s.hasNext()) {
+                return new SendCommand();
+            }
+        } else if (token.equalsIgnoreCase("list")) {
+            if (!s.hasNext()) {
+                return new ListCommand();
+            }
+        } else if (token.equalsIgnoreCase("help")) {
+            if (!s.hasNext()) {
+                return new HelpCommand();
             }
         } else if (token.equalsIgnoreCase("exit")) {
-            if (s.hasNext()) {
-                System.out.println("Unknown format: " + line);
-            } else {
-                exit();
+            if (!s.hasNext()) {
+                return new ExitCommand();
             }
-        } else {
-            processUnknownCommand(line);
+        }
+        return null;
+    }
+
+    private AddCommand parseAdd(Scanner s) {
+        if (s.hasNext()) {
+            return null;
+        }
+        System.out.println("Please, enter sender: ");
+        String sender = scanner.nextLine();
+        System.out.println("Please, enter receive: ");
+        String receiver = scanner.nextLine();
+        System.out.println("Please, enter address: ");
+        String address = scanner.nextLine();
+        System.out.println("Please, enter category from: " + Arrays.toString(Message.MessageCategory.values()));
+        String category = scanner.nextLine().trim();
+        Message.MessageCategory cat = parseCategory(category);
+        return new AddCommand(sender, receiver, address, cat);
+    }
+
+    private EditCommand parseEdit(Scanner s) {
+        if (s.hasNextLong()) {
+            long l = s.nextLong();
+            if (!s.hasNext()) {
+                return new EditCommand(l);
+            }
+        }
+        return null;
+    }
+
+    private RemoveCommand parseRemove(Scanner s) {
+        if (s.hasNextLong()) {
+            long l = s.nextLong();
+            if (!s.hasNext()) {
+                return new RemoveCommand(l);
+            }
+        }
+        return null;
+    }
+
+    public void readEdit(EditCommand command, Message message) {
+        System.out.print("Change sender (" + message.getSender() + ") if you want: ");
+        String line = scanner.nextLine().trim();
+        if (!line.isEmpty()) {
+            command.setSender(line);
+        }
+
+        System.out.print("Change receiver (" + message.getReceiver() + ") if you want: ");
+        line = scanner.nextLine().trim();
+        if (!line.isEmpty()) {
+            command.setReceiver(line);
+        }
+
+        System.out.print("Change address (" + message.getAddress() + ") if you want: ");
+        line = scanner.nextLine().trim();
+        if (!line.isEmpty()) {
+            command.setAddress(line);
+        }
+
+        System.out.print("Change category (" + message.getCategory() + ") if you want: ");
+        line = scanner.nextLine().trim();
+        if (!line.isEmpty()) {
+            command.setCategory(parseCategory(line));
         }
     }
 
-    private void remove(long l) {
-        System.out.println("REMOVING " + l);
-    }
-
-    private void processUnknownCommand(String line) {
-        System.out.println("Unknown command: " + line);
-    }
-
-    private void exit() {
-        System.out.println("Exiting...");
-        System.exit(0);
+    private Message.MessageCategory parseCategory(String category) {
+        Message.MessageCategory cat;
+        switch (category) {
+            case "first_class":
+                cat = Message.MessageCategory.FIRST_CLASS;
+                break;
+            case "special":
+                cat = Message.MessageCategory.SPECIAL;
+            case "regular":
+            default:
+                cat = Message.MessageCategory.REGULAR;
+                break;
+        }
+        return cat;
     }
 }
