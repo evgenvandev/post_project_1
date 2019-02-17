@@ -1,37 +1,44 @@
 package com.levelb.post;
 
 import com.levelb.post.command.*;
-
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Администратор on 14.02.2019.
  */
 public class Main {
 
+    private static final Logger commandLog = LoggerFactory.getLogger("CommandLog");
+
     public static void main(String[] args) {
+        //log.debug("Hello, I am logger!");
+
         MessageBox messageBox = new MessageBox();
-        UseConsoleInputReader consoleInputReader = new UseConsoleInputReader();
+        OutputPrinter printer = new OutputPrinter(System.out);
+        UseConsoleInputReader consoleInputReader = new UseConsoleInputReader(printer);
         while (true) {
+            printer.printUserPrompt();
             UserCommand userCommand = consoleInputReader.nextCommand();
             if (userCommand == null) {
-                System.out.println("Unknown command: ");
+                printer.println("Unknown command: ");
             } else {
-                execute(userCommand, messageBox, consoleInputReader);
+                commandLog.debug(userCommand.toString());
+                execute(userCommand, messageBox, consoleInputReader, printer);
             }
         }
     }
 
-    private static void execute(UserCommand userCommand, MessageBox messageBox, UseConsoleInputReader consoleInputReader) {
+    private static void execute(UserCommand userCommand, MessageBox messageBox, UseConsoleInputReader consoleInputReader, OutputPrinter printer) {
         if (userCommand instanceof EditCommand) {
             EditCommand command = (EditCommand) userCommand;
             Message message = messageBox.search(command.getId());
             if (message == null) {
-                System.out.println("User unknown!");
+                printer.println("User unknown!");
             } else {
                 consoleInputReader.readEdit(command, message.getSender(), message.getReceiver(), message.getAddress(), message.getCategory());
             }
         }
-        userCommand.execute(messageBox);
+        userCommand.execute(messageBox, printer);
     }
 }

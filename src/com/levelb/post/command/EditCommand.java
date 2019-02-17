@@ -2,6 +2,7 @@ package com.levelb.post.command;
 
 import com.levelb.post.Message;
 import com.levelb.post.MessageBox;
+import com.levelb.post.OutputPrinter;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -38,15 +39,28 @@ public class EditCommand implements UserCommand {
     }
 
     @Override
-    public void execute(MessageBox messageBox) {
+    public void execute(MessageBox messageBox, OutputPrinter printer) {
         Message message = messageBox.search(id);
         if (message == null) {
-            System.out.println("Couldn't find message " + id + "!");
+            printer.println("Couldn't find message " + id + "!");
             return;
         }
         message.setCategory(category);
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setAddress(address);
+        printer.println("Message updated: " + message);
+        printer.printSeparator();
+    }
+
+    @Override
+    public String toString() {
+        return "EditCommand{" +
+                "id=" + id +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", address='" + address + '\'' +
+                ", category=" + category +
+                '}';
     }
 }

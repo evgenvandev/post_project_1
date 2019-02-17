@@ -1,6 +1,7 @@
 package com.levelb.post.command;
 
 import com.levelb.post.MessageBox;
+import com.levelb.post.OutputPrinter;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -13,12 +14,20 @@ public class RemoveCommand implements UserCommand {
     }
 
     @Override
-    public void execute(MessageBox messageBox) {
+    public void execute(MessageBox messageBox, OutputPrinter printer) {
         boolean delete = messageBox.delete(id);
         if (delete) {
-            System.out.println("Message " + id + " was successfully removed!");
+            printer.println("Message " + id + " was successfully removed!");
         } else {
-            System.out.println("Message " + id + " was not found!");
+            printer.println("Message " + id + " was not found!");
         }
+        printer.printSeparator();
+    }
+
+    @Override
+    public String toString() {
+        return "RemoveCommand{" +
+                "id=" + id +
+                '}';
     }
 }

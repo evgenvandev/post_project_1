@@ -12,8 +12,10 @@ import java.util.function.Function;
 public class UseConsoleInputReader {
 
     private Scanner scanner;
+    private OutputPrinter printer;
 
-    public UseConsoleInputReader() {
+    public UseConsoleInputReader(OutputPrinter printer) {
+        this.printer = printer;
         scanner = new Scanner(System.in);
     }
 
@@ -55,13 +57,17 @@ public class UseConsoleInputReader {
         if (s.hasNext()) {
             return null;
         }
-        System.out.println("Please, enter sender: ");
+        printer.println("Please, enter sender: ");
+        printer.printUserPrompt();
         String sender = scanner.nextLine();
-        System.out.println("Please, enter receive: ");
+        printer.println("Please, enter receive: ");
+        printer.printUserPrompt();
         String receiver = scanner.nextLine();
-        System.out.println("Please, enter address: ");
+        printer.println("Please, enter address: ");
+        printer.printUserPrompt();
         String address = scanner.nextLine();
-        System.out.println("Please, enter category from: " + Arrays.toString(Message.MessageCategory.values()));
+        printer.println("Please, enter category from: " + Arrays.toString(Message.MessageCategory.values()));
+        printer.printUserPrompt();
         Message.MessageCategory cat = readCategory();
         return new AddCommand(sender, receiver, address, cat);
     }
@@ -74,7 +80,8 @@ public class UseConsoleInputReader {
             if (cat != null) {
                 break;
             } else {
-                System.out.println("Please, enter category from: " + Arrays.toString(Message.MessageCategory.values()));
+                printer.println("Please, enter category from: " + Arrays.toString(Message.MessageCategory.values()));
+                printer.printUserPrompt();
             }
         }
         return cat;
@@ -114,16 +121,16 @@ public class UseConsoleInputReader {
     }
 
     public void readEdit(EditCommand command, String sender, String receiver, String address, Message.MessageCategory category) {
-        System.out.print("Change sender (" + sender + ") if you want: ");
+        printer.print("Change sender (" + sender + ") if you want: ");
         command.setSender(readOrSkip(sender));
 
-        System.out.print("Change receiver (" + receiver + ") if you want: ");
+        printer.print("Change receiver (" + receiver + ") if you want: ");
         command.setReceiver(readOrSkip(receiver));
 
-        System.out.print("Change address (" + address + ") if you want: ");
+        printer.print("Change address (" + address + ") if you want: ");
         command.setAddress(readOrSkip(address));
 
-        System.out.print("Change category (" + category + ") if you want: ");
+        printer.print("Change category (" + category + ") if you want: ");
         command.setCategory(readOrSkip(category, this::convertToCategory, category1 -> category1 !=null));
     }
 
@@ -138,7 +145,8 @@ public class UseConsoleInputReader {
             if (validate.apply(result)) {
                 return result;
             } else {
-                System.out.println("Wrong value, please repeat!");
+                printer.println("Wrong value, please repeat!");
+                printer.printUserPrompt();
             }
         }
         return previous;
