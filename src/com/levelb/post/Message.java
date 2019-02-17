@@ -26,6 +26,12 @@ public class Message {
         this.date = new Date();
     }
 
+    public Message(long id, MessageCategory category, String sender, String address, String receiver, Date date) {
+        this(category, sender, address, receiver);
+        this.id = id;
+        this.date = date;
+    }
+
     public MessageCategory getCategory() {
         return category;
     }

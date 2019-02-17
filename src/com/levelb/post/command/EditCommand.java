@@ -40,15 +40,12 @@ public class EditCommand implements UserCommand {
 
     @Override
     public void execute(MessageBox messageBox, OutputPrinter printer) {
+        messageBox.update(id, category, sender, receiver, address);
         Message message = messageBox.search(id);
         if (message == null) {
             printer.println("Couldn't find message " + id + "!");
             return;
         }
-        message.setCategory(category);
-        message.setSender(sender);
-        message.setReceiver(receiver);
-        message.setAddress(address);
         printer.println();
         printer.println("Message updated: ");
         printer.print(message);
