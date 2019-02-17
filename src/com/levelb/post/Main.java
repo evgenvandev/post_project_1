@@ -17,6 +17,8 @@ public class Main {
         MessageBox messageBox = new MessageBox();
         OutputPrinter printer = new OutputPrinter(System.out);
         UseConsoleInputReader consoleInputReader = new UseConsoleInputReader(printer);
+        printer.println("Please use following commands:");
+        printer.printHelp();
         while (true) {
             printer.printUserPrompt();
             UserCommand userCommand = consoleInputReader.nextCommand();

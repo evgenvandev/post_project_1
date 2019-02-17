@@ -49,8 +49,11 @@ public class EditCommand implements UserCommand {
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setAddress(address);
-        printer.println("Message updated: " + message);
+        printer.println();
+        printer.println("Message updated: ");
+        printer.print(message);
         printer.printSeparator();
+
     }
 
     @Override

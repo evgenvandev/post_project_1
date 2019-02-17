@@ -16,6 +16,7 @@ public class RemoveCommand implements UserCommand {
     @Override
     public void execute(MessageBox messageBox, OutputPrinter printer) {
         boolean delete = messageBox.delete(id);
+        printer.println();
         if (delete) {
             printer.println("Message " + id + " was successfully removed!");
         } else {

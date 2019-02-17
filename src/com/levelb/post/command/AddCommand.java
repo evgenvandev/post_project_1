@@ -23,7 +23,9 @@ public class AddCommand implements UserCommand {
     @Override
     public void execute(MessageBox messageBox, OutputPrinter printer) {
         long id = messageBox.add(category, sender, address, receiver);
-        printer.println("Added message: id = " + id);
+        printer.println();
+        printer.println("Added message:");
+        printer.print(messageBox.search(id));
         printer.printSeparator();
     }
 

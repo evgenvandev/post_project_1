@@ -12,7 +12,11 @@ public class SendCommand implements UserCommand {
     @Override
     public void execute(MessageBox messageBox, OutputPrinter printer) {
         List<Long> longs = messageBox.sendToMainOffice();
-        printer.println("Following message were sent: " + longs);
+        printer.println();
+        printer.println("Following message were sent: ");
+        for (Long id : longs) {
+            printer.printAlign("Id", id);
+        }
         printer.printSeparator();
     }
 

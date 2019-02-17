@@ -29,7 +29,7 @@ public class MessageBox {
     }
 
     public long add(Message.MessageCategory category, String sender, String address, String receiver) {
-        log.debug(String.format("Add following message: category = %s, from %s, to %s(%s);", category, sender, receiver, address));
+        log.debug(String.format("Add following message: category = %s, from %s, to %s(address: %s);", category, sender, receiver, address));
         Message message = new Message(category, sender, address, receiver);
         message.setId(nextIndex++);
         messages.add(message);
