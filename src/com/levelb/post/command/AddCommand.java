@@ -1,8 +1,8 @@
 package com.levelb.post.command;
 
 import com.levelb.post.Message;
-import com.levelb.post.MessageBox;
 import com.levelb.post.OutputPrinter;
+import com.levelb.post.PostBusinessLogic;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -21,11 +21,11 @@ public class AddCommand implements UserCommand {
     }
 
     @Override
-    public void execute(MessageBox messageBox, OutputPrinter printer) {
-        long id = messageBox.add(category, sender, address, receiver);
+    public void execute(PostBusinessLogic logic, OutputPrinter printer) {
+        long id = logic.add(category, sender, address, receiver);
         printer.println();
         printer.println("Added message:");
-        printer.print(messageBox.search(id));
+        printer.print(logic.search(id));
         printer.printSeparator();
     }
 

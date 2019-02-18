@@ -1,7 +1,7 @@
 package com.levelb.post.command;
 
-import com.levelb.post.MessageBox;
 import com.levelb.post.OutputPrinter;
+import com.levelb.post.PostBusinessLogic;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -14,8 +14,8 @@ public class RemoveCommand implements UserCommand {
     }
 
     @Override
-    public void execute(MessageBox messageBox, OutputPrinter printer) {
-        boolean delete = messageBox.delete(id);
+    public void execute(PostBusinessLogic logic, OutputPrinter printer) {
+        boolean delete = logic.delete(id);
         printer.println();
         if (delete) {
             printer.println("Message " + id + " was successfully removed!");

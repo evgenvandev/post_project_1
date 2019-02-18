@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         //log.debug("Hello, I am logger!");
 
-        MessageBox messageBox = new MessageBox();
+        PostBusinessLogic logic = new PostBusinessLogic();
         OutputPrinter printer = new OutputPrinter(System.out);
         UseConsoleInputReader consoleInputReader = new UseConsoleInputReader(printer);
         printer.println("Please use following commands:");
@@ -26,21 +26,21 @@ public class Main {
                 printer.println("Unknown command: ");
             } else {
                 commandLog.debug(userCommand.toString());
-                execute(userCommand, messageBox, consoleInputReader, printer);
+                execute(userCommand, logic, consoleInputReader, printer);
             }
         }
     }
 
-    private static void execute(UserCommand userCommand, MessageBox messageBox, UseConsoleInputReader consoleInputReader, OutputPrinter printer) {
+    private static void execute(UserCommand userCommand, PostBusinessLogic logic, UseConsoleInputReader consoleInputReader, OutputPrinter printer) {
         if (userCommand instanceof EditCommand) {
             EditCommand command = (EditCommand) userCommand;
-            Message message = messageBox.search(command.getId());
+            Message message = logic.search(command.getId());
             if (message == null) {
                 printer.println("User unknown!");
             } else {
                 consoleInputReader.readEdit(command, message.getSender(), message.getReceiver(), message.getAddress(), message.getCategory());
             }
         }
-        userCommand.execute(messageBox, printer);
+        userCommand.execute(logic, printer);
     }
 }

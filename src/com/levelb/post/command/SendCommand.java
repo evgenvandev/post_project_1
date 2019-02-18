@@ -1,7 +1,7 @@
 package com.levelb.post.command;
 
-import com.levelb.post.MessageBox;
 import com.levelb.post.OutputPrinter;
+import com.levelb.post.PostBusinessLogic;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class SendCommand implements UserCommand {
     @Override
-    public void execute(MessageBox messageBox, OutputPrinter printer) {
-        List<Long> longs = messageBox.sendToMainOffice();
+    public void execute(PostBusinessLogic logic, OutputPrinter printer) {
+        List<Long> longs = logic.sendToMainOffice();
         printer.println();
         printer.println("Following message were sent: ");
         for (Long id : longs) {

@@ -1,8 +1,8 @@
 package com.levelb.post.command;
 
 import com.levelb.post.Message;
-import com.levelb.post.MessageBox;
 import com.levelb.post.OutputPrinter;
+import com.levelb.post.PostBusinessLogic;
 
 /**
  * Created by Администратор on 15.02.2019.
@@ -39,9 +39,9 @@ public class EditCommand implements UserCommand {
     }
 
     @Override
-    public void execute(MessageBox messageBox, OutputPrinter printer) {
-        messageBox.update(id, category, sender, receiver, address);
-        Message message = messageBox.search(id);
+    public void execute(PostBusinessLogic logic, OutputPrinter printer) {
+        logic.update(id, category, sender, receiver, address);
+        Message message = logic.search(id);
         if (message == null) {
             printer.println("Couldn't find message " + id + "!");
             return;

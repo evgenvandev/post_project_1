@@ -25,13 +25,16 @@ public class MessageBox {
     }
 
     public MessageBox(int count) {
-        log.debug(String.format("Create message box with initial size = %d", count));
-        messages = new ArrayList<>(count);
-        mainOffice = new MainOffice();
-        List<Message> existingMessages = read();
-        messages.addAll(existingMessages);
+        this(count, new ArrayList<>());
+    }
 
-        for (Message existingMessage : existingMessages) {
+    public MessageBox(int count, List<Message> messages) {
+        log.debug(String.format("Create message box with initial size = %d", count));
+        this.messages = new ArrayList<>(count);
+        mainOffice = new MainOffice();
+        this.messages.addAll(messages);
+
+        for (Message existingMessage : messages) {
             nextIndex = Math.max(nextIndex, existingMessage.getId()) + 1;
         }
 
@@ -43,7 +46,6 @@ public class MessageBox {
         Message message = new Message(category, sender, address, receiver);
         message.setId(nextIndex++);
         messages.add(message);
-        save();
         return message.getId();
     }
 
@@ -62,7 +64,6 @@ public class MessageBox {
             Message next = iterator.next();
             if (next.getId() == id) {
                 iterator.remove();
-                save();
                 log.debug(String.format("Delete message: %d", id));
                 return true;
             }
@@ -83,7 +84,6 @@ public class MessageBox {
                 iterator.remove();
             }
         }
-        save();
         return ids;
     }
 
@@ -98,44 +98,6 @@ public class MessageBox {
                 '}';
     }
 
-    public void save() {
-        try(PrintWriter writer = new PrintWriter(Paths.get("messages.txt").toFile())){
-            for (Message message : messages) {
-                writer.print(message.getId());
-                writer.print("\t");
-                writer.print(message.getCategory());
-                writer.print("\t");
-                writer.print(message.getSender());
-                writer.print("\t");
-                writer.print(message.getReceiver());
-                writer.print("\t");
-                writer.print(message.getAddress());
-                writer.print("\t");
-                writer.print(message.getDate().getTime());
-                writer.println();
-            }
-        } catch (FileNotFoundException e) {
-            log.error("Error writing file:", e);
-        }
-    }
-
-    public List<Message> read() {
-        List<Message> messages = new ArrayList<>();
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("messages.txt"));
-            for (String line : lines) {
-                String[] tokens = line.split("\t");
-                Long id = Long.parseLong(tokens[0]);
-                Message.MessageCategory category = Message.MessageCategory.valueOf(tokens[1]);
-                Date date = new Date(Long.parseLong(tokens[5]));
-                messages.add(new Message(id, category, tokens[2], tokens[4], tokens[3], date));
-            }
-        } catch (IOException e) {
-            log.error("Error reading file:", e);
-        }
-        return messages;
-    }
-
     public void update(long id, Message.MessageCategory category, String sender, String receiver, String address) {
         Message message = search(id);
         if (message == null) {
@@ -145,7 +107,5 @@ public class MessageBox {
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setAddress(address);
-
-        save();
     }
 }
